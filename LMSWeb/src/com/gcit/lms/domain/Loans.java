@@ -10,61 +10,60 @@ import java.util.Date;
  *
  */
 public class Loans {
-	private int bookId;
-	private int branchId;
-	private String title;
-	private String branchName;
+	private Book book;
+	private Branch branch;
+	private Borrower borrower;
 	private Date dateOut;
 	private Date dueDate;
+	private Date dateIn;
 	
 	/**
-	 * @return the title
+	 * @return the dateIn
 	 */
-	public String getTitle() {
-		return title;
+	public Date getDateIn() {
+		return dateIn;
 	}
 	/**
-	 * @param title the title to set
+	 * @param dateIn the dateIn to set
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setDateIn(Date dateIn) {
+		this.dateIn = dateIn;
 	}
 	/**
-	 * @return the branchName
+	 * @return the book
 	 */
-	public String getBranchName() {
-		return branchName;
+	public Book getBook() {
+		return book;
 	}
 	/**
-	 * @param branchName the branchName to set
+	 * @param book the book to set
 	 */
-	public void setBranchName(String branchName) {
-		this.branchName = branchName;
-	}
-	
-	/**
-	 * @return the bookId
-	 */
-	public int getBookId() {
-		return bookId;
+	public void setBook(Book book) {
+		this.book = book;
 	}
 	/**
-	 * @param bookId the bookId to set
+	 * @return the branch
 	 */
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+	public Branch getBranch() {
+		return branch;
 	}
 	/**
-	 * @return the branchId
+	 * @param branch the branch to set
 	 */
-	public int getBranchId() {
-		return branchId;
+	public void setBranch(Branch branch) {
+		this.branch = branch;
 	}
 	/**
-	 * @param branchId the branchId to set
+	 * @return the borrower
 	 */
-	public void setBranchId(int branchId) {
-		this.branchId = branchId;
+	public Borrower getBorrower() {
+		return borrower;
+	}
+	/**
+	 * @param borrower the borrower to set
+	 */
+	public void setBorrower(Borrower borrower) {
+		this.borrower = borrower;
 	}
 	/**
 	 * @return the dateOut

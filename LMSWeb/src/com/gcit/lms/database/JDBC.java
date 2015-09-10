@@ -33,10 +33,10 @@ public class JDBC {
 			
 			getConnection();
 			
-			if(pub.getPubId() != 0){
+			if(pub.getPublisherId() != 0){
 				pstmt = conn.prepareStatement("insert into tbl_book (title,pubId) values (?,?)",Statement.RETURN_GENERATED_KEYS);
 				pstmt.setString(1, book.getTitle());
-				pstmt.setInt(2, pub.getPubId());
+				pstmt.setInt(2, pub.getPublisherId());
 			}
 			else
 			{
@@ -84,9 +84,9 @@ public class JDBC {
 		// TODO Auto-generated method stub
 		try {
 			PreparedStatement pstmt = getConnection().prepareStatement("insert into tbl_Publisher (publisherName,publisherAddress,publisherPhone) values (?,?,?)",Statement.RETURN_GENERATED_KEYS);
-			pstmt.setString(1, pub.getPubName());
-			pstmt.setString(2, pub.getPubAddress());
-			pstmt.setString(3, pub.getPubPhone());
+			pstmt.setString(1, pub.getPublisherName());
+			pstmt.setString(2, pub.getPublisherAddress());
+			pstmt.setString(3, pub.getPublisherPhone());
 			pstmt.executeUpdate();
 			
 			ResultSet rs = pstmt.getGeneratedKeys();
@@ -235,10 +235,10 @@ public class JDBC {
 			
 			while(rs.next()){
 				Publisher p = new Publisher();
-				p.setPubId(rs.getInt("publisherId"));
-				p.setPubName(rs.getString("publisherName"));
-				p.setPubAddress(rs.getString("publisherAddress"));
-				p.setPubPhone(rs.getString("publisherPhone"));
+				p.setPublisherId(rs.getInt("publisherId"));
+				p.setPublisherName(rs.getString("publisherName"));
+				p.setPublisherAddress(rs.getString("publisherAddress"));
+				p.setPublisherPhone(rs.getString("publisherPhone"));
 				pubs.add(p);
 			}
 		} catch (ClassNotFoundException e) {
@@ -410,9 +410,13 @@ try {
 			
 			while(rs.next()){
 				BCopies b = new BCopies();
-				b.setBookId(rs.getInt("bookId"));
-				b.setTitle(rs.getString("title"));
+				Book book = new Book();
+				
+				book.setBookId(rs.getInt("bookId"));
+				book.setTitle(rs.getString("title"));
 				b.setNoofCopies(rs.getInt("noOfCopies"));
+				b.setBook(book);
+				b.setBranch(branch);
 				
 				bcopies.add(b);
 			}
@@ -466,8 +470,8 @@ try {
 			
 			PreparedStatement pstmt = getConnection().prepareStatement("update tbl_book_copies set noOfCopies = noOfCopies+? where branchId=? and bookId=?");
 			pstmt.setInt(1, b.getAddCopies());
-			pstmt.setInt(2, b.getBranchId());
-			pstmt.setInt(3, b.getBookId());
+			pstmt.setInt(2, b.getBranch().getBranchId());
+			pstmt.setInt(3, b.getBook().getBookId());
 			
 			return pstmt.executeUpdate();
 			
@@ -532,15 +536,20 @@ try {
 					ResultSet rs = pstmt.executeQuery();
 					while(rs.next())
 					{
-						Loans l =new Loans();
-						l.setBookId(rs.getInt("bookId"));
-						l.setBranchId(rs.getInt("branchId"));
-						l.setBranchName(rs.getString("branchName"));
-						l.setTitle(rs.getString("title"));
-						l.setDateOut(rs.getDate("dateOut"));
-						l.setDueDate(rs.getDate("dueDate"));
+						Loans loan =new Loans();
+						Book book = new Book();
+						Branch branch =new Branch();
 						
-						loans.add(l);
+						book.setBookId(rs.getInt("bookId"));
+						branch.setBranchId(rs.getInt("branchId"));
+						branch.setBranchName(rs.getString("branchName"));
+						book.setTitle(rs.getString("title"));
+						loan.setDateOut(rs.getDate("dateOut"));
+						loan.setDueDate(rs.getDate("dueDate"));
+						loan.setBook(book);
+						loan.setBranch(branch);
+						
+						loans.add(loan);
 						
 					}
 							
@@ -625,9 +634,14 @@ try {
 			if(pstmt.executeUpdate()>0)
 			{
 				BCopies bc = new BCopies();
-				bc.setBookId(bookId);
-				bc.setBranchId(branchId);
+				Book book = new Book();
+				Branch branch = new Branch();
+				book.setBookId(bookId);
+				branch.setBranchId(branchId);
 				bc.setAddCopies(1);
+				bc.setBook(book);
+				bc.setBranch(branch);
+				
 				return updateCopies(bc);
 			}
 			

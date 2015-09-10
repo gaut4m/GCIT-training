@@ -45,10 +45,10 @@ ${message}
 			<input type="text" style="text-align:center;" name="branchId" value="<%=b.getBranchId()%>" size="3" readonly>
 			</td>
 			<td align="center" >
-		<input type="text" style="text-align:center;" id="bookId" name="bookId" value="<%=a.getBookId()%>" size="3" readonly>
+		<input type="text" style="text-align:center;" id="bookId" name="bookId" value="<%=a.getBook().getBookId()%>" size="3" readonly>
 		</td>
 			<td align="center">
-			<input type="text" style="text-align:center;" id="title" name="title" value="<%=a.getTitle()%>" readonly></td>
+			<input type="text" style="text-align:center;" id="title" name="title" value="<%=a.getBook().getTitle()%>" readonly></td>
 			<td align="center"><input type="text" style="text-align:center;" id="noOfCopies" name="noOfCopies" value="<%=a.getNoofCopies()%>" size="5" readonly></td>
 			<td align="center">+&nbsp;<input type="text" style="text-align:center;" id="addCopies" name="addCopies" value="" size="5">&nbsp;<input type="submit" value="UPDATE"></td>
 			</form>

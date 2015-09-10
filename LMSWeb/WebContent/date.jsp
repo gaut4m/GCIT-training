@@ -48,12 +48,12 @@ ${message}
 			<td align="center" ><input type="text" style="text-align:center;" id="cardNo" name="cardNo" value="<%=b.getCardNo()%>" size="4" readonly></td>
 			<td align="center" ><input type="text" style="text-align:center;" id="name" name="name" value="<%=b.getName()%>" size="4" readonly></td>
 			<td align="center" >
-			<input type="text" id="branchId" name="branchId" value="<%=l.getBranchId()%>" style="display:none">
-			<input type="text" style="text-align:center;" id="branchName" name="branchName" value="<%=l.getBranchName()%>" readonly>
+			<input type="text" id="branchId" name="branchId" value="<%=l.getBranch().getBranchId()%>" style="display:none">
+			<input type="text" style="text-align:center;" id="branchName" name="branchName" value="<%=l.getBranch().getBranchName()%>" readonly>
 			</td>
 			<td align="center" >
-			<input type="text"  id="bookId" name="bookId" value="<%=l.getBookId()%>" style="display:none">
-			<input type="text" style="text-align:center;" id="title" name="title" value="<%=l.getTitle()%>" readonly></td>
+			<input type="text"  id="bookId" name="bookId" value="<%=l.getBook().getBookId()%>" style="display:none">
+			<input type="text" style="text-align:center;" id="title" name="title" value="<%=l.getBook().getTitle()%>" readonly></td>
 			<td align="center" ><input type="text" style="text-align:center;" id="dateOut" name="dateOut" value="<%=l.getDateOut()%>"  readonly></td>
 			<td align="center" ><input type="text" style="text-align:center;" id="dueDate" name="dueDate" value="<%=l.getDueDate()%>" readonly></td>
 			<td align="center">

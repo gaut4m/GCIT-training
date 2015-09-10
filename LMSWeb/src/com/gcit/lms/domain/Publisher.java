@@ -1,65 +1,88 @@
-/**
- * 
- */
 package com.gcit.lms.domain;
 
+import java.util.List;
 
-/**
- * @author Gautham
- *
- */
 public class Publisher {
-	private int pubId;
-	private String pubName;
-	private String pubAddress;
-	private String pubPhone;
+	
+	private int publisherId;
+	
+	private String publisherName;
+	
+	private String publisherAddress;
+	
+	private String publisherPhone;
+	
+	private List<Book> books;
+
 	/**
-	 * @return the pubId
+	 * @return the publisherId
 	 */
-	public int getPubId() {
-		return pubId;
+	public int getPublisherId() {
+		return publisherId;
 	}
+
 	/**
-	 * @param pubId the pubId to set
+	 * @param publisherId the publisherId to set
 	 */
-	public void setPubId(int pubId) {
-		this.pubId = pubId;
+	public void setPublisherId(int publisherId) {
+		this.publisherId = publisherId;
 	}
+
 	/**
-	 * @return the pubName
+	 * @return the publisherName
 	 */
-	public String getPubName() {
-		return pubName;
+	public String getPublisherName() {
+		return publisherName;
 	}
+
 	/**
-	 * @param pubName the pubName to set
+	 * @param publisherName the publisherName to set
 	 */
-	public void setPubName(String pubName) {
-		this.pubName = pubName;
+	public void setPublisherName(String publisherName) {
+		this.publisherName = publisherName;
 	}
+
 	/**
-	 * @return the pubAddress
+	 * @return the publisherAddress
 	 */
-	public String getPubAddress() {
-		return pubAddress;
+	public String getPublisherAddress() {
+		return publisherAddress;
 	}
+
 	/**
-	 * @param pubAddress the pubAddress to set
+	 * @param publisherAddress the publisherAddress to set
 	 */
-	public void setPubAddress(String pubAddress) {
-		this.pubAddress = pubAddress;
+	public void setPublisherAddress(String publisherAddress) {
+		this.publisherAddress = publisherAddress;
 	}
+
 	/**
-	 * @return the pubPhone
+	 * @return the publisherPhone
 	 */
-	public String getPubPhone() {
-		return pubPhone;
+	public String getPublisherPhone() {
+		return publisherPhone;
 	}
+
 	/**
-	 * @param pubPhone the pubPhone to set
+	 * @param publisherPhone the publisherPhone to set
 	 */
-	public void setPubPhone(String pubPhone) {
-		this.pubPhone = pubPhone;
+	public void setPublisherPhone(String publisherPhone) {
+		this.publisherPhone = publisherPhone;
 	}
+
+	/**
+	 * @return the books
+	 */
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	/**
+	 * @param books the books to set
+	 */
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+	
 
 }

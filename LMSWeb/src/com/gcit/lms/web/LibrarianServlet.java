@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.gcit.lms.database.JDBC;
 import com.gcit.lms.domain.Author;
 import com.gcit.lms.domain.BCopies;
+import com.gcit.lms.domain.Book;
 import com.gcit.lms.domain.Branch;
 
 /**
@@ -83,13 +84,18 @@ public class LibrarianServlet extends HttpServlet {
 		int bookId = new Integer(request.getParameter("bookId"));
 		int addCopies = new Integer(request.getParameter("addCopies"));
 		
-		BCopies b =new BCopies();
-		b.setBranchId(branchId);
-		b.setBookId(bookId);
-		b.setAddCopies(addCopies);
+		BCopies bcopies =new BCopies();
+		Book book = new Book();
+		Branch branch = new Branch();
+		branch.setBranchId(branchId);
+		book.setBookId(bookId);
+		bcopies.setAddCopies(addCopies);
+		bcopies.setBook(book);
+		bcopies.setBranch(branch);
+		
 		
 		JDBC jdbc = new JDBC();
-		return jdbc.updateCopies(b);
+		return jdbc.updateCopies(bcopies);
 	}
 
 	private int updateBranch(HttpServletRequest request) {

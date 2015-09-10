@@ -6,6 +6,7 @@ private int branchId;
 private String branchName;
 private String branchAddress;
 
+
 /**
  * @return the branchId
  */

@@ -131,7 +131,7 @@ function validateForm() {
 <option value="select"> ----Select----</option>
 <option value="new" >New Publisher</option>
 <%for(Publisher p: pubs){ %>
-	<option value="<%=p.getPubId() %>" ><%=p.getPubName() %></option>	
+	<option value="<%=p.getPublisherId() %>" ><%=p.getPublisherName() %></option>	
 <%} %>
 </select>
 </td>

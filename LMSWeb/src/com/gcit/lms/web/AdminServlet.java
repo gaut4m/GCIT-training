@@ -232,9 +232,9 @@ public class AdminServlet extends HttpServlet {
 			pubName = request.getParameter("pubName");
 			pubAddr = request.getParameter("pubAddr");
 			pubPhone = request.getParameter("pubPhone");
-			pub.setPubName(pubName);
-			pub.setPubAddress(pubAddr);
-			pub.setPubPhone(pubPhone);
+			pub.setPublisherName(pubName);
+			pub.setPublisherAddress(pubAddr);
+			pub.setPublisherPhone(pubPhone);
 			pubId = jdbc.addPublisher(pub);
 			System.out.println(pubId);
 			if(pubId ==0)
@@ -249,7 +249,7 @@ public class AdminServlet extends HttpServlet {
 			pubId=new Integer(selectPub);
 		
 		author.setAuthorId(authorId);
-		pub.setPubId(pubId);
+		pub.setPublisherId(pubId);
 		
 		Book book = new Book();
 		book.setTitle(request.getParameter("title"));

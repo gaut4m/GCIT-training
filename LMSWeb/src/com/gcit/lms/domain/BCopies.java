@@ -8,22 +8,22 @@ package com.gcit.lms.domain;
  *
  */
 public class BCopies {
-	private int bookId;
-	private String title;
 	private int noofCopies;
 	private int addCopies;
-	private static int BranchId;
+	private Book book;
+	private Branch branch;
+	
 	/**
-	 * @return the branchId
+	 * @return the noofCopies
 	 */
-	public static int getBranchId() {
-		return BranchId;
+	public int getNoofCopies() {
+		return noofCopies;
 	}
 	/**
-	 * @param branchId the branchId to set
+	 * @param noofCopies the noofCopies to set
 	 */
-	public static void setBranchId(int branchId) {
-		BranchId = branchId;
+	public void setNoofCopies(int noofCopies) {
+		this.noofCopies = noofCopies;
 	}
 	/**
 	 * @return the addCopies
@@ -38,40 +38,29 @@ public class BCopies {
 		this.addCopies = addCopies;
 	}
 	/**
-	 * @return the bookId
+	 * @return the book
 	 */
-	public int getBookId() {
-		return bookId;
+	public Book getBook() {
+		return book;
 	}
 	/**
-	 * @param bookId the bookId to set
+	 * @param book the book to set
 	 */
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+	public void setBook(Book book) {
+		this.book = book;
 	}
 	/**
-	 * @return the title
+	 * @return the branch
 	 */
-	public String getTitle() {
-		return title;
+	public Branch getBranch() {
+		return branch;
 	}
 	/**
-	 * @param title the title to set
+	 * @param branch the branch to set
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setBranch(Branch branch) {
+		this.branch = branch;
 	}
-	/**
-	 * @return the noofCopies
-	 */
-	public int getNoofCopies() {
-		return noofCopies;
-	}
-	/**
-	 * @param noofCopies the noofCopies to set
-	 */
-	public void setNoofCopies(int noofCopies) {
-		this.noofCopies = noofCopies;
-	}
+	
 
 }
