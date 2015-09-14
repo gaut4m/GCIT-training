@@ -2,12 +2,14 @@
     pageEncoding="ISO-8859-1"%>
 
 <%@ page import="com.gcit.lms.domain.Branch"%>
-<%@ page import="com.gcit.lms.database.JDBC"%>
+<%@ page import="com.gcit.lms.service.AdministratorService"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
-<%JDBC jdbc = new JDBC();
+<%
+	AdministratorService admin = new AdministratorService();
+
 	List<Branch> branches = new ArrayList<Branch>();
-	branches = jdbc.getBranch(null);
+	branches = (List<Branch>)admin.getService("branch");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -23,13 +25,11 @@ ${message}
 
 <table>
 	<tr>
-	<th>branch ID</th>
 	<th>Branch Name</th>
 	<th>select Branch</th>
 	</tr>
 	<%for(Branch a: branches){ %>
 		<tr>
-			<td align="center" ><%=a.getBranchId() %></td>
 			<td align="center"><%=a.getBranchName() %></td>
 			<td align="center"><a href="branch.jsp?branchId=<%=a.getBranchId()%>">SELECT</a></td>
 			</tr>

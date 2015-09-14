@@ -1,28 +1,23 @@
 package com.gcit.lms.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.List;
 
-public abstract class BaseDAO {
-	private static String driver = "com.mysql.jdbc.Driver";
-	private static String dbURL = "jdbc:mysql://localhost:3306/library";
-	private static String userName = "root";
-	private static String pwd = "root";
-
-	public static Connection getConnection() throws ClassNotFoundException,
-			SQLException {
-		Class.forName(driver);
-		Connection conn = DriverManager.getConnection(dbURL, userName, pwd);
-		return conn;
+public abstract class BaseDAO<T> {
+	Connection conn = null;
+	
+	public BaseDAO(Connection conn){
+		this.conn = conn;
 	}
 	
+	
+	
 	public int save(String query, Object[] vals) throws SQLException, ClassNotFoundException{
-		PreparedStatement pstmt = getConnection().prepareStatement(query);
+		PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		
 		if(vals!=null){
 			int count =1;
@@ -44,7 +39,7 @@ public abstract class BaseDAO {
 	}
 	
 	public int check(String query, Object[] vals) throws SQLException, ClassNotFoundException{
-		PreparedStatement pstmt = getConnection().prepareStatement(query);
+		PreparedStatement pstmt = conn.prepareStatement(query);
 		
 		if(vals!=null){
 			int count =1;
@@ -63,9 +58,8 @@ public abstract class BaseDAO {
 		return -1;
 	}
 	
-	public <T> List<T> readAll(String query, Object[] vals) throws ClassNotFoundException, SQLException{
-		List<T> objects = new ArrayList<T>();
-		PreparedStatement pstmt = getConnection().prepareStatement(query);
+	public List<?> readAll(String query, Object[] vals) throws ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement(query);
 		
 		if(vals!=null){
 			int count =1;
@@ -75,9 +69,25 @@ public abstract class BaseDAO {
 			}
 		}
 		ResultSet rs = pstmt.executeQuery();
-		return (List<T>) extractData(rs);
+		return (List<?>) extractData(rs);
 	}
 	
 	abstract public List<?> extractData(ResultSet rs);
-
+	
+	
+	public List<?> readFirstLevel(String query, Object[] vals) throws ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement(query);
+		
+		if(vals!=null){
+			int count =1;
+			for(Object o: vals){
+				pstmt.setObject(count, o);
+				count++;
+			}
+		}
+		ResultSet rs = pstmt.executeQuery();
+		return (List<?>) extractDataFirstLevel(rs);
+	}
+	
+	abstract public List<?> extractDataFirstLevel(ResultSet rs);
 }

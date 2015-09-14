@@ -14,6 +14,8 @@ import com.gcit.lms.domain.Author;
 import com.gcit.lms.domain.BCopies;
 import com.gcit.lms.domain.Book;
 import com.gcit.lms.domain.Branch;
+import com.gcit.lms.service.AdministratorService;
+import com.gcit.lms.service.LibrarianService;
 
 /**
  * Servlet implementation class LibrarianServlet
@@ -51,20 +53,30 @@ public class LibrarianServlet extends HttpServlet {
 		
 		case "/updateBranch":
 			//TODO Call Edit on JDBC
+			try{
 			i = updateBranch(request);
 			if(i == 1)
 				request.setAttribute("message", "Branch name: "+request.getParameter("branchName")+", Branch Address: "+request.getParameter("branchAddr")+" succesfully updated.");
 			else
 				request.setAttribute("message", "Branch details not updated. Try Again!!");
-			
+			}catch(Exception e)
+			{
+				
+			}
 			
 			break;
 		case "/updateCopies":
+			try{
 			i = updateCopies(request);
 			if(i == 1)
 				request.setAttribute("message", "Book with Id "+request.getParameter("bookId")+" for branch with Id "+request.getParameter("branchId")+"  no.of copeies is updated.");
 			else
 				request.setAttribute("message", "book title not updated. Try Again!!");
+			}
+			catch(Exception e)
+			{
+				
+			}
 			forwardPath = "/updatecopies.jsp";
 			
 			break;
@@ -78,7 +90,7 @@ public class LibrarianServlet extends HttpServlet {
 		
 	}
 
-	private int updateCopies(HttpServletRequest request) {
+	private int updateCopies(HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		int branchId = new Integer(request.getParameter("branchId"));
 		int bookId = new Integer(request.getParameter("bookId"));
@@ -93,24 +105,27 @@ public class LibrarianServlet extends HttpServlet {
 		bcopies.setBook(book);
 		bcopies.setBranch(branch);
 		
+		LibrarianService lib = new LibrarianService();
 		
-		JDBC jdbc = new JDBC();
-		return jdbc.updateCopies(bcopies);
+		return lib.updateCopies(bcopies);
 	}
 
-	private int updateBranch(HttpServletRequest request) {
+	private int updateBranch(HttpServletRequest request) throws Exception {
 		// TODO Auto-generated method stub
 		int branchId = new Integer(request.getParameter("branchId"));
 		String branchName = request.getParameter("branchName");
-		String branchAddr = request.getParameter("branchAddr");
+		
+		String branchAddress = request.getParameter("branchAddress");
 		
 		Branch branch = new Branch();
 		branch.setBranchId(branchId);
 		branch.setBranchName(branchName);
-		branch.setBranchAddress(branchAddr);
+		branch.setBranchAddress(branchAddress);
 		
-		JDBC jdbc = new JDBC();
-		return jdbc.updateBranch(branch);
+		
+		
+			AdministratorService admin =new AdministratorService();
+			return admin.updateService(branch);
 	}
 
 }

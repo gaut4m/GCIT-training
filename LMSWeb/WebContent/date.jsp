@@ -1,18 +1,22 @@
+<%@page import="com.gcit.lms.service.AdministratorService"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="com.gcit.lms.domain.Loans"%>
     <%@ page import="com.gcit.lms.domain.Borrower"%>
+    <%@ page import="com.gcit.lms.service.AdministratorService"%>
+    
 <%@ page import="com.gcit.lms.database.JDBC"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
-<%JDBC jdbc = new JDBC();
+<%
+	AdministratorService admin = new AdministratorService();
 	List<Borrower> br = new ArrayList<Borrower>();
+	br = (List<Borrower>)admin.getService("users");
 	
-	br = jdbc.getBorrowers();
 	 for(Borrower b: br)
 	 {
 		 List<Loans> loans = new ArrayList<Loans>();
-		 loans = jdbc.getLoans(b.getCardNo());
+		 loans = admin.getLoans(b.getCardNo());
 		 b.setLoans(loans);
 	 }
 	 

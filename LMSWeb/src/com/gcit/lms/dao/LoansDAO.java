@@ -1,5 +1,6 @@
 package com.gcit.lms.dao;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,34 +13,36 @@ import com.gcit.lms.domain.Loans;
 
 public class LoansDAO extends BaseDAO {
 
-	public void loanBook(Loans loan) throws ClassNotFoundException,
+	public LoansDAO(Connection conn) {
+		super(conn);
+		// TODO Auto-generated constructor stub
+	}
+
+	public int loanBook(Loans loan) throws ClassNotFoundException,
 			SQLException {
-		
+	
+		return save("insert into tbl_book_loans (bookId,branchId,cardNo,dateOut,dueDate) value (?,?,?,CURDATE(),CURDATE()+INTERVAL 7 DAY)",
+				new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(),loan.getBorrower().getCardNo() });
 	}
 
 	public int returnBook(Loans loan) throws ClassNotFoundException,
 			SQLException {
-		int i=save("update tbl_book_loans set dateIn= CURDATE() where branchId=? and bookId=? and cardNo = ?",
+		
+		return save("update tbl_book_loans set dateIn= CURDATE() where branchId=? and bookId=? and cardNo = ?",
 				new Object[] { loan.getBranch().getBranchId(), loan.getBook().getBookId(),loan.getBorrower().getCardNo() });
-		if(i>0){
-			BCopies bc =new BCopies();
-			bc.setBook(loan.getBook());
-			bc.setBranch(loan.getBranch());
-			bc.setAddCopies(1);
-			BCopiesDAO bcDAO = new BCopiesDAO();
-			return bcDAO.updateBCopies(bc);
-		}
-		return 0;	
+		
+			
 		
 	}
 	
-	public int extendLoan(Loans loan) throws ClassNotFoundException,
-	SQLException {
-return save("update tbl_book_loans set dueDate= dueDate + INTERVAL 7 DAY where branchId=? and bookId=? and cardNo = ?",
-		new Object[] { loan.getBranch().getBranchId(), loan.getBook().getBookId(),loan.getBorrower().getCardNo() });
+	public int extendLoan(int bookId, int branchId, int cardNo) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return save("update tbl_book_loans set dueDate= dueDate + INTERVAL 7 DAY where branchId=? and bookId=? and cardNo = ?",
+				new Object[] { branchId, bookId, cardNo });
 
-
-}
+	}
+	
+	
 	
 
 	public List<Loans> getLoans(int cardNo) throws ClassNotFoundException,
@@ -81,4 +84,12 @@ return save("update tbl_book_loans set dueDate= dueDate + INTERVAL 7 DAY where b
 
 		return loans;
 	}
+
+	@Override
+	public List extractDataFirstLevel(ResultSet rs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

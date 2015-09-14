@@ -2,16 +2,16 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="com.gcit.lms.domain.Branch"%>
 <%@ page import="com.gcit.lms.database.JDBC"%>
+<%@ page import="com.gcit.lms.service.AdministratorService"%>
+<%@ page import="com.gcit.lms.service.LibrarianService"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
-<% JDBC jdbc = new JDBC();
-List<Branch> branches = new ArrayList<Branch>();
-Branch b = new Branch();
-
+<% AdministratorService admin = new AdministratorService();
+LibrarianService lib =new LibrarianService();
 int branchId = new Integer(request.getParameter("branchId"));
-b.setBranchId(branchId);
-branches = jdbc.getBranch(b);
-b=branches.get(0);
+
+Branch branch = new Branch();
+branch = lib.getBranch(branchId);
 %>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -24,16 +24,16 @@ b=branches.get(0);
 <body align="center">
 
 <h1>Branch Management</h1>
-<h3>You have chosen to update Branch details of <%=b.getBranchName() %> branch </h3>
+<h3>You have chosen to update Branch details of <%=branch.getBranchName() %> branch </h3>
 
 <form action="updateBranch" method="post">
 	
-		<input type="text" name="branchId" value="<%=b.getBranchId() %>" style="display:none">
+		<input type="text" name="branchId" value="<%=branch.getBranchId() %>" style="display:none">
 		<table align="center" >
 		<tr><td>
-		Enter Branch Name:</td><td> <input type="text" name="branchName"></td></tr>
+		Enter Branch Name:</td><td> <input type="text" name="branchName"  value="<%=branch.getBranchName()%>"></td></tr>
 		<tr><td>
-		Enter Branch Address:</td><td> <input type="text" name="branchAddr">
+		Enter Branch Address:</td><td> <input type="text" name="branchAddr" value="<%if(branch.getBranchName()!=null)out.println(branch.getBranchAddress());%>">
 		 </td></tr>
 		 <tr>
 		 <td>
@@ -43,7 +43,7 @@ b=branches.get(0);
 	
 	</form>
 	<br/>
-	<a href="branch.jsp?branchId=<%=b.getBranchId()%>">Previous page</a><br/>
+	<a href="branch.jsp?branchId=<%=branch.getBranchId()%>">Previous page</a><br/>
 
 </body>
 </html>

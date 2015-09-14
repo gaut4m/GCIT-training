@@ -2,20 +2,22 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="com.gcit.lms.domain.Branch"%>
 <%@ page import="com.gcit.lms.domain.BCopies"%>
+<%@ page import="com.gcit.lms.service.AdministratorService"%>
+<%@ page import="com.gcit.lms.service.LibrarianService"%>
 <%@ page import="com.gcit.lms.database.JDBC"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
-<% JDBC jdbc = new JDBC();
-List<Branch> branches = new ArrayList<Branch>();
-Branch b = new Branch();
-
+<% 
+AdministratorService admin = new AdministratorService();
+LibrarianService lib =new LibrarianService();
 int branchId = new Integer(request.getParameter("branchId"));
-b.setBranchId(branchId);
-branches = jdbc.getBranch(b);
-b=branches.get(0);
+
+Branch branch = new Branch();
+branch = lib.getBranch(branchId);
+
 List<BCopies> copies = new ArrayList<BCopies>();
 
-copies= jdbc.getCopies(b);
+copies= lib.getCopies(branchId);
 
 
 %>      
@@ -29,12 +31,11 @@ copies= jdbc.getCopies(b);
 <body>
 ${message}
 
-<h2> View Existing Authors</h2>
+<h2> View Existing Copies</h2>
 <table>
 	<tr>
-	<th>Branch ID</th>
-	<th>Book ID</th>
-	<th>Title</th>
+	<th>Branch Name</th>
+	<th>Book Title</th>
 	<th>No.Of Copies</th>
 	<th>Add Copies</th>
 	</tr>
@@ -42,12 +43,11 @@ ${message}
 		<tr>
 			<form  action="updateCopies" id="myform"  method="post">
 			<td align="center" >
-			<input type="text" style="text-align:center;" name="branchId" value="<%=b.getBranchId()%>" size="3" readonly>
+			<input type="text" name="branchId" value="<%=branch.getBranchId()%>" style="display:none">
+			<input type="text" style="text-align:center;" id="branchName" name="branchName" value="<%=a.getBranch().getBranchName()%>" readonly>
 			</td>
 			<td align="center" >
-		<input type="text" style="text-align:center;" id="bookId" name="bookId" value="<%=a.getBook().getBookId()%>" size="3" readonly>
-		</td>
-			<td align="center">
+			<input type="text" id="bookId" name="bookId" value="<%=a.getBook().getBookId()%>" style="display:none">
 			<input type="text" style="text-align:center;" id="title" name="title" value="<%=a.getBook().getTitle()%>" readonly></td>
 			<td align="center"><input type="text" style="text-align:center;" id="noOfCopies" name="noOfCopies" value="<%=a.getNoofCopies()%>" size="5" readonly></td>
 			<td align="center">+&nbsp;<input type="text" style="text-align:center;" id="addCopies" name="addCopies" value="" size="5">&nbsp;<input type="submit" value="UPDATE"></td>
@@ -58,7 +58,7 @@ ${message}
 </table>
 <br/>
 
-<a href="branch.jsp?branchId=<%=b.getBranchId()%>">Previous page</a><br/>
+<a href="branch.jsp?branchId=<%=branch.getBranchId()%>">Previous page</a><br/>
 
 
 </body>

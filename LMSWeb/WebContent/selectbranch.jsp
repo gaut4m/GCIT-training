@@ -3,7 +3,7 @@
     <%@ page import="com.gcit.lms.domain.Loans"%>
     <%@ page import="com.gcit.lms.domain.Branch"%>
     <%@ page import="com.gcit.lms.domain.Borrower"%>
-<%@ page import="com.gcit.lms.database.JDBC"%>
+<%@ page import="com.gcit.lms.service.AdministratorService"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
 <%
@@ -20,15 +20,19 @@ if(null == session.getAttribute("cardNo")){
 		
 	}
 %>
-<%JDBC jdbc = new JDBC();
+
+
+<%
+	AdministratorService admin = new AdministratorService();
+
 	List<Branch> branches = new ArrayList<Branch>();
-	branches = jdbc.getBranch(null);
+	branches = (List<Branch>)admin.getService("branch");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>GCIT LMS</title>
 <script>
 function myFunction() {
     var branch = document.getElementById("branchId").value;
@@ -40,11 +44,11 @@ if(branch == "select"){
 	return false;
     
 }
-   alert(branch);
 }
 </script>
 </head>
 <body>
+${message}
 
 
 <form action="selectBranch"  onsubmit="myFunction()" method="post">

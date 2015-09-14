@@ -1,5 +1,6 @@
 package com.gcit.lms.dao;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,6 +10,11 @@ import com.gcit.lms.domain.Borrower;
 import com.gcit.lms.domain.Branch;
 
 public class BranchDAO extends BaseDAO {
+
+	public BranchDAO(Connection conn) {
+		super(conn);
+		// TODO Auto-generated constructor stub
+	}
 
 	public void createBranch(Branch branch) throws ClassNotFoundException,
 			SQLException {
@@ -22,22 +28,25 @@ public class BranchDAO extends BaseDAO {
 				new Object[] { branch.getBranchName(),branch.getBranchAddress(), branch.getBranchId() });
 	}
 
-	public void deleteBranch(Branch branch) throws ClassNotFoundException,
+	public int deleteBranch(int branchId) throws ClassNotFoundException,
 			SQLException {
 		int i=0;
-		if(checkBranch(branch)==0)
-		i=save("delete from tbl_book_copies where branchId=?",
-				new Object[] { branch.getBranchId() });
-		if(i>0)
-			save("delete from tbl_library_branch where branchId=?",
-					new Object[] { branch.getBranchId() });
+		if(checkBranch(branchId)==0){
+			save("delete from tbl_book_copies where branchId=?",
+				new Object[] { branchId });
+
+		return	save("delete from tbl_library_branch where branchId=?",
+					new Object[] {branchId });
+		}
+		
+		return 0;
 	}
 	
-	private int checkBranch(Branch branch) throws ClassNotFoundException,
+	private int checkBranch(int branchId) throws ClassNotFoundException,
 	SQLException {
 		// TODO Auto-generated method stub
 		return check("select Count(*) from tbl_book_loans where branchId=?",
-				new Object[] {branch.getBranchId()});
+				new Object[] {branchId});
 		
 	}
 
@@ -46,11 +55,11 @@ public class BranchDAO extends BaseDAO {
 		return readAll("select * from tbl_library_branch", null);
 	}
 
-	public Branch getBranch(Branch branch) throws ClassNotFoundException,
+	public Branch getBranch(int branchId) throws ClassNotFoundException,
 			SQLException {
 		List<Branch> branches = new ArrayList<Branch>();
 		branches = readAll("select * from tbl_library_branch where branchId = ?",
-				new Object[] { branch.getBranchId() });
+				new Object[] { branchId });
 
 		if (branches != null && branches.size() > 0) {
 			return branches.get(0);
@@ -77,5 +86,11 @@ public class BranchDAO extends BaseDAO {
 		}
 
 		return branches;
+	}
+
+	@Override
+	public List extractDataFirstLevel(ResultSet rs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
