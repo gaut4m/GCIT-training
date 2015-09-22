@@ -11,7 +11,7 @@
 <%
 	AdministratorService admin = new AdministratorService();
 	List<Borrower> br = new ArrayList<Borrower>();
-	br = (List<Borrower>)admin.getService("users");
+	//br = (List<Borrower>)admin.getService("users");
 	
 	 for(Borrower b: br)
 	 {

@@ -2,14 +2,19 @@
     pageEncoding="ISO-8859-1"%>
  <%@ page import="com.gcit.lms.domain.Author"%>
  <%@ page import="com.gcit.lms.domain.Publisher"%>
-<%@ page import="com.gcit.lms.database.JDBC"%>
+<%@ page import="com.gcit.lms.service.AdministratorService"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
-<%JDBC jdbc = new JDBC();
+<%
+AdministratorService admin = new AdministratorService();
+
+
 	List<Author> authors = new ArrayList<Author>();
-	authors = jdbc.getAuthors();
+
+	authors = (List<Author>)admin.getService("authors","",-1,-1);
+	
 	List<Publisher> pubs = new ArrayList<Publisher>();
-	pubs = jdbc.getPubs();
+	pubs = (List<Publisher>)admin.getService("pubs", "", -1,-1);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -18,7 +23,12 @@
 <title>GCIT LMS</title>
 
 
+
 <script>
+
+
+
+
 function myFunction() {
     var authorName = document.getElementById("authorId").value;
     var e = document.getElementById("authorDetails");
@@ -97,6 +107,8 @@ function validateForm() {
 	
    
 }
+
+
 </script>
 
 </head>
@@ -105,7 +117,31 @@ function validateForm() {
 <p id="demo" color = "red"></p>
 
 <h1 align="center"">Add Book</h1>
+
+<form action="#" method="post" id="demoForm" class="demoForm">
+    <fieldset>
+        <legend>Demo: Get Selected Options</legend>
+    
+        <p>
+            <select name="demoSel[]" id="demoSel" size="4" multiple>
+                <option value="scroll">Scrolling Divs JavaScript</option>
+                <option value="tooltip">JavaScript Tooltips</option>
+                <option value="con_scroll">Continuous Scroller</option>
+                <option value="banner">Rotating Banner JavaScript</option>
+                <option value="random_img">Random Image PHP</option>
+                <option value="form_builder">PHP Form Generator</option>
+                <option value="table_class">PHP Table Class</option>
+                <option value="order_forms">PHP Order Forms</option>
+            </select>
+            <input type="submit" value="Submit" />
+            <textarea name="display" id="display" placeholder="view select list value(s) onchange" cols="20" rows="4" readonly></textarea>
+        </p>
+        
+    </fieldset>
+</form>
+
 <form action="addBook" onSubmit="return validateForm()" method="post">
+
 
 
 <table border=1 width=400px align="center">
@@ -114,7 +150,7 @@ function validateForm() {
 <tr>
 
 <td>Select Author:</td><td>
-<select id="authorId" name="authorId" onChange="myFunction()" >
+<select id="authorId" name="authorId" multiple>
 <option value="select"> ----Select----</option>
 <option value="new" >New Author</option>
 <%for(Author a: authors){ %>
@@ -175,4 +211,70 @@ Author Name:</td><td > <input type="text" id="authorName" name="authorName" valu
 <br/>
 <a href="book.jsp">Previous Page</a><br/>
 </body>
+
+<script type="text/javascript">
+(function() {
+    
+    function getSelectedOptions(sel, fn) {
+        var opts = [], opt;
+        
+        // loop through options in select list
+        for (var i=0, len=sel.options.length; i<len; i++) {
+            opt = sel.options[i];
+            
+            // check if selected
+            if ( opt.selected ) {
+                // add to array of option elements to return from this function
+                opts.push(opt);
+                
+                // invoke optional callback function if provided
+                if (fn) {
+                    fn(opt);
+                }
+            }
+        }
+        
+        // return array containing references to selected option elements
+        return opts;
+    }
+    
+    // anonymous function onchange for select list with id demoSel
+    document.getElementById('authorId').onchange = function(e) {
+        // get reference to display textarea
+        var display = document.getElementById('display');
+        display.innerHTML = ''; // reset
+        
+        // callback fn handles selected options
+        getSelectedOptions(this, callback);
+        
+        // remove ', ' at end of string
+        var str = display.innerHTML.slice(0, -2);
+        display.innerHTML = str;
+    };
+    
+    document.getElementById('demoForm').onsubmit = function(e) {
+        // reference to select list using this keyword and form elements collection
+        // no callback function used this time
+        var opts = getSelectedOptions( this.elements['demoSel[]'] );
+        
+        alert( 'The number of options selected is: ' + opts.length ); //  number of selected options
+        
+        return false; // don't return online form
+    };
+    
+    // example callback function (selected options passed one by one)
+    function callback(opt) {
+        // can access properties of opt, such as...
+        //alert( opt.value )
+        //alert( opt.text )
+        //alert( opt.form )
+        
+        // display in textarea for this example
+        var display = document.getElementById('display');
+        display.innerHTML += opt.value + ', ';
+    }
+    
+}());
+
+</script>
 </html>

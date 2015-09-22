@@ -9,13 +9,14 @@ import java.util.List;
 
 public abstract class BaseDAO<T> {
 	Connection conn = null;
+	private int pageNo = -1;
+	private int pageSize = 10;
 	
 	public BaseDAO(Connection conn){
 		this.conn = conn;
 	}
 	
-	
-	
+
 	public int save(String query, Object[] vals) throws SQLException, ClassNotFoundException{
 		PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		
@@ -27,8 +28,6 @@ public abstract class BaseDAO<T> {
 			}
 		}
 		int i = pstmt.executeUpdate();
-		
-		
 		ResultSet rs = pstmt.getGeneratedKeys();
 		
 		if(rs!=null && rs.next())
@@ -59,6 +58,18 @@ public abstract class BaseDAO<T> {
 	}
 	
 	public List<?> readAll(String query, Object[] vals) throws ClassNotFoundException, SQLException{
+		
+		
+		int pageNo = getPageNo();
+		if(pageNo >-1){
+			int start = (pageNo-1)*getPageSize();
+			if(start >= 0){
+				query = query + " LIMIT "+start+" , "+getPageSize();
+			}else{
+				query = query + " LIMIT " +getPageSize(); 
+			}
+		}
+		
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		
 		if(vals!=null){
@@ -87,6 +98,40 @@ public abstract class BaseDAO<T> {
 		}
 		ResultSet rs = pstmt.executeQuery();
 		return (List<?>) extractDataFirstLevel(rs);
+	}
+	
+	/**
+	 * @return the pageNo
+	 */
+	public int getPageNo() {
+		return pageNo;
+	}
+
+
+
+	/**
+	 * @param pageNo the pageNo to set
+	 */
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+
+
+
+	/**
+	 * @return the pageSize
+	 */
+	public int getPageSize() {
+		return pageSize;
+	}
+
+
+
+	/**
+	 * @param pageSize the pageSize to set
+	 */
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 	abstract public List<?> extractDataFirstLevel(ResultSet rs);

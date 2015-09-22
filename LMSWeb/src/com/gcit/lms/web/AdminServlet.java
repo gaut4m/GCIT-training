@@ -1,7 +1,10 @@
 package com.gcit.lms.web;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
@@ -106,6 +109,8 @@ public class AdminServlet extends HttpServlet {
 		RequestDispatcher rd = request.getServletContext().getRequestDispatcher(forwardPath);
 		rd.forward(request, response);
 	}
+	
+	
 
 	private int deleteGenre(HttpServletRequest request) {
 		// TODO Auto-generated method stub

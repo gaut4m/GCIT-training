@@ -1,5 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
 <%@page import="com.gcit.lms.domain.Publisher"%>
 <%@ page import="com.gcit.lms.domain.Author"%>
 <%@ page import="com.gcit.lms.service.AdministratorService"%>
@@ -13,19 +11,16 @@ int publisherId = new Integer(request.getParameter("publisherId"));
 	pub = (Publisher)admin.getServiceById("pubById",publisherId);
 %>
 
-</head>
-<body>
-<h1>Edit Publisher</h1>
-	<h2>Edit Publisher Details</h2>
+<div class="modal-body">
 	<form action="editPublisher" method="post">
 		<input type="text" name="publisherId" value="<%=publisherId%>" style="display:none">
-		Enter Publisher Name: <input type="text" name="publisherName" value="<%=pub.getPublisherName()%>"><br/>
-		Enter Publisher Address: <input type="text" name="publisherAddr" value="<%if(pub.getPublisherAddress()!=null)out.println(pub.getPublisherAddress());%>"><br/>
-		Enter Publisher Phone: <input type="text" name="publisherPhone" value="<%if(pub.getPublisherPhone()!=null)out.println(pub.getPublisherPhone());%>"><br/>
-		 
-		<input type="submit" value="Submit">
-	
+		<table>
+		<tr>
+		<td>Enter Publisher Name:</td><td> <input type="text" name="publisherName" value="<%=pub.getPublisherName()%>"><br/>
+		</td></tr><tr><td>Enter Publisher Address:</td><td> <input type="text" name="publisherAddr" value="<%if(pub.getPublisherAddress()!=null)out.println(pub.getPublisherAddress());%>"><br/>
+		</td></tr><tr><td>Enter Publisher Phone:</td><td> <input type="text" name="publisherPhone" value="<%if(pub.getPublisherPhone()!=null)out.println(pub.getPublisherPhone());%>"><br/>
+		</td></tr><tr><td></td><td><input type="submit" value="Submit"></td>
+		</tr>
+		</table>
 	</form>
-<a href="viewpublisher.jsp">Previous Page</a><br/>
-</body>
-</html>
+</div>

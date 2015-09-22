@@ -69,6 +69,161 @@ public class AdministratorService {
 
 	
 
+	public List<?> getService(String str,String searchString, int startNo,int endCnt ) throws Exception
+	{
+		switch(str)
+		{
+		case "pubs":
+			return (List<?>) getPublisher(searchString,startNo,endCnt);
+		case "authors":
+			return (List<?>) getAuthor(searchString,startNo,endCnt);
+		case "books":
+			return (List<?>) getBook();
+		case "users":
+			return (List<?>)getBorrower(startNo,endCnt);
+		case "genres":
+			return (List<?>)getGenres(startNo,endCnt);
+		case "branch":
+			return (List<?>)getBranch(startNo,endCnt);
+		
+		
+		default:
+			break;
+		}
+		return null;
+	}
+
+	public int getCount(String string, String searchString) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		switch(string)
+		{
+		case "pubs":
+			return  publisherCount(searchString);
+		case "authors":
+			return authorCount(searchString);
+		//case "books":
+		//	return  getBook();
+		case "users":
+			return borrowerCount(searchString);
+		case "genres":
+			return genreCount(searchString);
+		case "branch":
+			return branchCount(searchString);
+		
+		
+		default:
+			break;
+		}
+		return 0;
+	}
+
+	public Object getServiceById(String str, int id) throws Exception
+	{
+	
+		switch(str)
+		{
+		
+		case "pubById":
+			return getPublisher(id);
+		case "cardNo":
+			return getBorrower(id);
+		case "book":
+			return getBook(id);
+		
+		default:
+			break;
+		}
+		return null;
+	}
+
+	public List<Loans> getLoans(int cardNo) throws Exception {
+		// TODO Auto-generated method stub
+		Connection conn = ConnectionUtil.getConnection();
+		LoansDAO bdao = new LoansDAO(conn);
+		try{
+			
+			return bdao.getLoans(cardNo);
+			
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return null;
+	}
+
+	public int deleteService(String str, int id) throws Exception {
+		// TODO Auto-generated method stub
+		switch(str)
+		{
+		
+		case "pub":
+			return deletePublisher(id);
+			
+		case "cardNo":
+				return deleteBorrower(id);
+		case "branch":
+			return deleteBranch(id);
+		case "genre":
+			return deleteGenre(id);
+				
+		default:
+			break;
+		}
+		
+		return 0;
+	}
+
+	public int createAuthor(Author author) throws Exception {
+		//Boolean flag = validateAuthor(author)
+		int i=0;
+			Connection conn = connUtil.getConnection();
+			AuthorDAO adao = new AuthorDAO(conn);
+			try{
+				if(author.getAuthorName()!=null && author.getAuthorName() !=""){
+				if(author.getAuthorName().length() > 45){
+					throw new Exception("Author Name cannot be more than 45 chars");
+				}else{
+					adao.createAuthor(author);
+					i=1;
+					}
+				}
+				conn.commit();
+				
+			}catch(Exception e){
+				e.printStackTrace();
+				conn.rollback();
+			}finally{
+				conn.close();
+			}
+			return i;
+	}
+
+	public int extendDate(int bookId, int branchId, int cardNo) throws Exception {
+		// TODO Auto-generated method stub
+		int i=0;
+		Connection conn = connUtil.getConnection();
+		LoansDAO adao = new LoansDAO(conn);
+		try{
+			
+				i= adao.extendLoan(bookId,branchId,cardNo);
+				
+			if(i>0)	
+			conn.commit();
+			else
+				conn.rollback();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			conn.rollback();
+		}finally{
+			conn.close();
+		}
+		return i;
+	}
+
 	private int updateGenre(Genre obj) throws Exception {
 		// TODO Auto-generated method stub
 		int i=0;
@@ -89,6 +244,33 @@ public class AdministratorService {
 				throw new Exception("Genre Name cannot be null");
 				
 				conn.commit();
+			}
+			catch(Exception e){
+			e.printStackTrace();
+			conn.rollback();
+		}finally{
+			conn.close();
+		}
+		return i;
+	}
+
+	private int updatePublisher(Publisher obj)throws Exception {
+		// TODO Auto-generated method stub
+		int i=0;
+		Connection conn = ConnectionUtil.getConnection();
+		PublisherDAO pdao = new PublisherDAO(conn);
+		
+		try{
+			if(obj.getPublisherName() !=null){
+			if(obj.getPublisherName().length() > 20){
+				throw new Exception("Publisher Name cannot be more than 20 chars");
+			}else{
+				pdao.updatePublisher(obj);
+				i=1;
+			}
+			
+			}
+			conn.commit();
 			}
 			catch(Exception e){
 			e.printStackTrace();
@@ -129,31 +311,128 @@ public class AdministratorService {
 		return i;
 	}
 
-	public List<?> getService(String str ) throws Exception
-	{
-		switch(str)
-		{
-		case "pubs":
-			return (List<?>) getPublisher();
-		case "authors":
-			return (List<?>) getAuthor();
-		case "books":
-			return (List<?>) getBook();
-		case "users":
-			return (List<?>)getBorrower();
-		case "genres":
-			return (List<?>)getGenres();
-		case "branch":
-			return (List<?>)getBranch();
-		
-		
-		default:
-			break;
+	private int updateAuthor(Author author) throws Exception {
+		// TODO Auto-generated method stub
+		int i=0;
+		Connection conn = connUtil.getConnection();
+		AuthorDAO adao = new AuthorDAO(conn);
+		try{
+			if(author.getAuthorName()!=null && author.getAuthorName() !=""){
+			if(author.getAuthorName().length() > 45){
+				throw new Exception("Author Name cannot be more than 45 chars");
+			}else{
+				adao.updateAuthor(author);
+				i=1;
+				}
+			}
+			conn.commit();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			conn.rollback();
+		}finally{
+			conn.close();
 		}
-		return null;
+		return i;
 	}
 
-	
+	private int updateBorrower(Borrower obj) throws Exception{
+		// TODO Auto-generated method stub
+		int i=0;
+		Connection conn = ConnectionUtil.getConnection();
+		BorrowerDAO bdao = new BorrowerDAO(conn);
+		
+		try{
+			
+			if(obj.getName().length() > 20){
+				throw new Exception("Borrower Name cannot be more than 20 chars");
+			}else{
+				bdao.updateBorrower(obj);
+				i=1;
+			}
+			
+			
+			conn.commit();
+			}
+			catch(Exception e){
+			e.printStackTrace();
+			conn.rollback();
+		}finally{
+			conn.close();
+		}
+		return i;
+	}
+
+	private int branchCount(String searchString) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = ConnectionUtil.getConnection();
+		PublisherDAO pdao = new PublisherDAO(conn);
+		try{
+				return pdao.getCount(searchString);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return 0;
+	}
+
+	private int genreCount(String searchString) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = ConnectionUtil.getConnection();
+		PublisherDAO pdao = new PublisherDAO(conn);
+		try{
+				return pdao.getCount(searchString);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return 0;
+	}
+
+	private int borrowerCount(String searchString) throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		Connection conn = ConnectionUtil.getConnection();
+		PublisherDAO pdao = new PublisherDAO(conn);
+		try{
+				return pdao.getCount(searchString);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return 0;
+	}
+
+	private int publisherCount(String searchString) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = ConnectionUtil.getConnection();
+		PublisherDAO pdao = new PublisherDAO(conn);
+		try{
+				return pdao.getCount(searchString);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return 0;
+	}
+
+	private int authorCount(String searchString) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = ConnectionUtil.getConnection();
+		AuthorDAO adao = new AuthorDAO(conn);
+		try{
+				return adao.getCount(searchString);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return 0;
+	}
+
 	
 
 	private List<?> getBook() {
@@ -192,84 +471,6 @@ public class AdministratorService {
 		return null;
 	}
 
-	private List<?> getBranch() throws Exception {
-		// TODO Auto-generated method stub
-Connection conn = ConnectionUtil.getConnection();
-		
-		BranchDAO adao = new BranchDAO(conn);
-		try{
-			
-			return adao.getAllBranchs();
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			conn.close();
-		}
-		return null;
-	}
-
-	private List<?> getGenres() throws Exception {
-		// TODO Auto-generated method stub
-		
-		Connection conn = ConnectionUtil.getConnection();
-		
-		GenreDAO adao = new GenreDAO(conn);
-		try{
-			
-			return adao.getAllGenres();
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			conn.close();
-		}
-		return null;
-	}
-
-	private List<?> getBorrower() throws Exception {
-		// TODO Auto-generated method stub
-		
-		Connection conn = ConnectionUtil.getConnection();
-		
-		BorrowerDAO bdao = new BorrowerDAO(conn);
-		try{
-			
-			return bdao.getAllBorrowers();
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			conn.close();
-		}
-		return null;
-	}
-
-	public Object getServiceById(String str, int id) throws Exception
-	{
-
-		switch(str)
-		{
-		
-		case "pubById":
-			return getPublisher(id);
-		case "cardNo":
-			return getBorrower(id);
-		case "book":
-			return getBook(id);
-		
-		default:
-			break;
-		}
-		return null;
-	}
-	
 	private Object getBook(int bookId) {
 		// TODO Auto-generated method stub
 		Connection conn = null;
@@ -306,13 +507,54 @@ Connection conn = ConnectionUtil.getConnection();
 		return null;
 	}
 
-	public List<Loans> getLoans(int cardNo) throws Exception {
+	private List<?> getBranch(int startNo, int endCnt) throws Exception {
 		// TODO Auto-generated method stub
-		Connection conn = ConnectionUtil.getConnection();
-		LoansDAO bdao = new LoansDAO(conn);
+Connection conn = ConnectionUtil.getConnection();
+		
+		BranchDAO adao = new BranchDAO(conn);
 		try{
 			
-			return bdao.getLoans(cardNo);
+			return adao.getAllBranchs();
+			
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return null;
+	}
+
+	private List<?> getGenres(int startNo, int endCnt) throws Exception {
+		// TODO Auto-generated method stub
+		
+		Connection conn = ConnectionUtil.getConnection();
+		
+		GenreDAO adao = new GenreDAO(conn);
+		try{
+			
+			return adao.getAllGenres();
+			
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return null;
+	}
+
+	private List<?> getBorrower(int startNo, int endCnt) throws Exception {
+		// TODO Auto-generated method stub
+		
+		Connection conn = ConnectionUtil.getConnection();
+		
+		BorrowerDAO bdao = new BorrowerDAO(conn);
+		try{
+			
+			return bdao.getAllBorrowers();
 			
 			
 		}
@@ -344,54 +586,65 @@ Connection conn = ConnectionUtil.getConnection();
 	}
 
 	
-	private int updateBorrower(Borrower obj) throws Exception{
+	private Object getPublisher(int id) throws Exception {
 		// TODO Auto-generated method stub
-		int i=0;
-		Connection conn = ConnectionUtil.getConnection();
-		BorrowerDAO bdao = new BorrowerDAO(conn);
 		
+		Connection conn = ConnectionUtil.getConnection();
+		PublisherDAO pdao = new PublisherDAO(conn);
 		try{
 			
-			if(obj.getName().length() > 20){
-				throw new Exception("Borrower Name cannot be more than 20 chars");
-			}else{
-				bdao.updateBorrower(obj);
-				i=1;
-			}
+			return pdao.getPublisherById(id);
 			
 			
-			conn.commit();
-			}
-			catch(Exception e){
+		}
+		catch(Exception e){
 			e.printStackTrace();
-			conn.rollback();
 		}finally{
 			conn.close();
 		}
-		return i;
+		return null;
 	}
-	public int deleteService(String str, int id) throws Exception {
+
+	private List<?> getPublisher(String searchString, int pageNo, int pageSize) throws Exception {
 		// TODO Auto-generated method stub
-		switch(str)
-		{
-		
-		case "pub":
-			return deletePublisher(id);
+		int i=0;
+		Connection conn = ConnectionUtil.getConnection();
+		i=0;
+		PublisherDAO pdao = new PublisherDAO(conn);
+		try{
 			
-		case "cardNo":
-				return deleteBorrower(id);
-		case "branch":
-			return deleteBranch(id);
-		case "genre":
-			return deleteGenre(id);
-				
-		default:
-			break;
+			return pdao.getAllPublishers(searchString,pageNo, pageSize);
+			
+			
 		}
-		
-		return 0;
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return null;
 	}
-	
+
+	private List<?> getAuthor(String searchString, int pageNo, int pageSize) throws Exception {
+		// TODO Auto-generated method stub
+		int i=0;
+		Connection conn = ConnectionUtil.getConnection();
+		i=0;
+		AuthorDAO adao = new AuthorDAO(conn);
+		try{
+			
+			return adao.getAllAuthors(searchString,pageNo, pageSize);
+			
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			conn.close();
+		}
+		return null;
+	}
+
 	private int deleteGenre(int genreId) throws Exception {
 		// TODO Auto-generated method stub
 		int i=0;
@@ -452,33 +705,6 @@ Connection conn = ConnectionUtil.getConnection();
 		return i;
 	}
 
-	private int updatePublisher(Publisher obj)throws Exception {
-		// TODO Auto-generated method stub
-		int i=0;
-		Connection conn = ConnectionUtil.getConnection();
-		PublisherDAO pdao = new PublisherDAO(conn);
-		
-		try{
-			if(obj.getPublisherName() !=null){
-			if(obj.getPublisherName().length() > 20){
-				throw new Exception("Publisher Name cannot be more than 20 chars");
-			}else{
-				pdao.updatePublisher(obj);
-				i=1;
-			}
-			
-			}
-			conn.commit();
-			}
-			catch(Exception e){
-			e.printStackTrace();
-			conn.rollback();
-		}finally{
-			conn.close();
-		}
-		return i;
-	}
-
 	private int deletePublisher(int publisherId)throws Exception {
 		// TODO Auto-generated method stub
 		int i=0;
@@ -495,45 +721,6 @@ Connection conn = ConnectionUtil.getConnection();
 			conn.close();
 		}
 		return i;
-	}
-
-	private Object getPublisher(int id) throws Exception {
-		// TODO Auto-generated method stub
-		
-		Connection conn = ConnectionUtil.getConnection();
-		PublisherDAO pdao = new PublisherDAO(conn);
-		try{
-			
-			return pdao.getPublisherById(id);
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			conn.close();
-		}
-		return null;
-	}
-
-	private List<?> getPublisher() throws Exception {
-		// TODO Auto-generated method stub
-		int i=0;
-		Connection conn = ConnectionUtil.getConnection();
-		i=0;
-		PublisherDAO pdao = new PublisherDAO(conn);
-		try{
-			
-			return pdao.getAllPublishers();
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			conn.close();
-		}
-		return null;
 	}
 
 	private int createBranch(Branch obj) throws Exception {
@@ -658,98 +845,7 @@ Connection conn = ConnectionUtil.getConnection();
 		return 0;
 	}
 
-	public int createAuthor(Author author) throws Exception {
-		//Boolean flag = validateAuthor(author)
-		int i=0;
-			Connection conn = connUtil.getConnection();
-			AuthorDAO adao = new AuthorDAO(conn);
-			try{
-				if(author.getAuthorName()!=null && author.getAuthorName() !=""){
-				if(author.getAuthorName().length() > 45){
-					throw new Exception("Author Name cannot be more than 45 chars");
-				}else{
-					adao.createAuthor(author);
-					i=1;
-					}
-				}
-				conn.commit();
-				
-			}catch(Exception e){
-				e.printStackTrace();
-				conn.rollback();
-			}finally{
-				conn.close();
-			}
-			return i;
-	}
 	
-	private List<?> getAuthor() throws Exception {
-		// TODO Auto-generated method stub
-		int i=0;
-		Connection conn = ConnectionUtil.getConnection();
-		i=0;
-		AuthorDAO adao = new AuthorDAO(conn);
-		try{
-			
-			return adao.getAllAuthors();
-			
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}finally{
-			conn.close();
-		}
-		return null;
-	}
-	
-	private int updateAuthor(Author author) throws Exception {
-		// TODO Auto-generated method stub
-		int i=0;
-		Connection conn = connUtil.getConnection();
-		AuthorDAO adao = new AuthorDAO(conn);
-		try{
-			if(author.getAuthorName()!=null && author.getAuthorName() !=""){
-			if(author.getAuthorName().length() > 45){
-				throw new Exception("Author Name cannot be more than 45 chars");
-			}else{
-				adao.updateAuthor(author);
-				i=1;
-				}
-			}
-			conn.commit();
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			conn.rollback();
-		}finally{
-			conn.close();
-		}
-		return i;
-	}
-
-	public int extendDate(int bookId, int branchId, int cardNo) throws Exception {
-		// TODO Auto-generated method stub
-		int i=0;
-		Connection conn = connUtil.getConnection();
-		LoansDAO adao = new LoansDAO(conn);
-		try{
-			
-				i= adao.extendLoan(bookId,branchId,cardNo);
-				
-			if(i>0)	
-			conn.commit();
-			else
-				conn.rollback();
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			conn.rollback();
-		}finally{
-			conn.close();
-		}
-		return i;
-	}
 
 	
 }

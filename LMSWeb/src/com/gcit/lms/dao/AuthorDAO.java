@@ -47,11 +47,27 @@ public class AuthorDAO extends BaseDAO {
 	
 }
 
-	public List<Author> getAllAuthors() throws ClassNotFoundException,
+	public List<Author> getAllAuthors(String searchString, int pageNo, int pageSize) throws ClassNotFoundException,
 			SQLException {
-		return readAll("select * from tbl_author", null);
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		searchString = "%"+searchString+"%";
+		
+		
+		return readAll("select * from tbl_author where authorName like ?",new Object[] { searchString });
 	}
 	
+	public int getCount(String searchString) throws ClassNotFoundException, SQLException{
+		searchString = "%"+searchString+"%";
+		return check("select count(*) as count from tbl_author where authorName like ?", new Object[] { searchString });
+	}
+	
+	public List<Author> getAuthorsByName(String searchString) throws ClassNotFoundException, SQLException {
+		searchString = "%"+searchString+"%";
+		
+		return readAll("select * from tbl_author where authorName like ?", new Object[] { searchString});
+		
+	}
 
 	public Author getAuthor(Author author) throws ClassNotFoundException,
 			SQLException {

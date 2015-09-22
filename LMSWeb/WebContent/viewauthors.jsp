@@ -9,10 +9,26 @@
 
 <%
 	AdministratorService admin = new AdministratorService();
+
+
+List<Author> authors = new ArrayList<Author>();
+
+	authors = (List<Author>)admin.getService("authors","",1, 10);
 	
 	
-	List<Author> authors = new ArrayList<Author>();
-	authors = (List<Author>)admin.getService("authors");
+		 int count = admin.getCount("authors", "");
+		
+		int pages = 1;
+
+		if(count%10==0){
+			pages = count/10;
+		}else{
+			pages = (count/10)+1;
+		}
+	 
+	
+	
+	
 %>
 
 <!DOCTYPE html>
@@ -59,6 +75,26 @@ function update(a,b)
 	$('#myModal').modal('show'); 
 	
 }
+
+function searchAuthors(){
+	$.ajax({
+		  url: "searchAuthors",
+		  data: { searchString: $('#searchString').val()}
+	, success: function(data){
+		$('#populateAuthors').html(data);
+    }});
+		  
+}
+function pageAuthors(a){
+	$.ajax({
+		  url: "pageAuthors",
+		  data: { searchString: $('#searchString').val(),pageNo:a}
+		})
+		  .done(function( data ) {
+		    $('#authorsTable').html(data);
+		  });
+}
+
 function validateForm(a)
 {}
 </script>
@@ -79,7 +115,7 @@ function validateForm(a)
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">GCIT LMS</a>
+              <a class="navbar-brand" href="index.jsp">GCIT LMS</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
@@ -124,10 +160,25 @@ function validateForm(a)
           </ul>
         </div>
         <div class="col-sm-7  col-md-10  main">
-          <h1 class="sub-header">View Existing Authors</h1>
+        
+		<input type="text" class="col-md-8" id="searchString"
+		placeholder="Enter Author name to search">
+		<input type="button" value="Search!" onclick="javascript:searchAuthors();">
+
+          <h1 class="sub-header">View Authors</h1>
 			 ${message}
+			 
+			 <div id="populateAuthors">
+			 
+			 <nav>
+  	<ul class="pagination">
+  		<% for(int i=1;i<=pages;i++){%>
+    <li><a href="javascript:pageAuthors(<%=i%>);"><%=i%></a></li>
+    <%} %>
+  </ul>
+</nav>
            <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped" id="authorsTable">
 
 	<thead>
 	<tr>
@@ -160,6 +211,7 @@ function validateForm(a)
 	<%} %>
 	
 </table>
+</div>
 </div>
           </div>
         

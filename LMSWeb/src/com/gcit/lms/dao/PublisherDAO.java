@@ -138,9 +138,19 @@ int i=0;
 				new Object[] { publisherId });
 	}
 
-	public List<Publisher> getAllPublishers() throws ClassNotFoundException,
+	public List<Publisher> getAllPublishers(String searchString, int pageNo, int pageSize) throws ClassNotFoundException,
 			SQLException {
-		return readAll("select * from tbl_publisher", null);
+		setPageNo(pageNo);
+		setPageSize(pageSize);
+		searchString = "%"+searchString+"%";
+		
+		return readAll("select * from tbl_publisher where publisherName like ? or publisherAddress like ? or publisherPhone like ?", new Object[] { searchString,searchString,searchString });
+	}
+
+	public int getCount(String searchString) throws ClassNotFoundException, SQLException {
+			searchString = "%"+searchString+"%";
+			return check("select count(*) as count from tbl_publisher where publisherName like ? or publisherAddress like ? or publisherPhone like ?", new Object[] { searchString,searchString,searchString });
+		
 	}
 
 	
